@@ -1,19 +1,21 @@
 // 用户相关的状态管理
 import { createSlice } from '@reduxjs/toolkit'
-import { request } from '@/utils'
+import { request, setToken as _setToken, getToken } from '@/utils'
 
 const userStore = createSlice({
   // 模块名
   name: 'user',
   // 数据状态
   initialState: {
-    token: ''
+    token: getToken() || ''
   },
   // 同步修改方法
   reducers: {
     // state 是当前的状态，action 是触发的方法传递的参数
     setToken (state, action) {
       state.token = action.payload
+      // 将token存入到localStorage中
+      _setToken(action.payload)
     }
   }
 })
