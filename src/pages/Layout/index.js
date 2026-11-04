@@ -6,10 +6,18 @@ import {
   LogoutOutlined
 } from '@ant-design/icons'
 import './index.scss'
+import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 
 const { Header, Sider } = Layout
 
 const GeekLayout = () => {
+  const location = useLocation()
+  const navigate = useNavigate()
+  const onMenuClick = (item) => {
+    const path = item.key
+    navigate(path)
+  }
+  const selectedKeys = location.pathname
   return (
     <Layout>
       <Header className="header">
@@ -28,21 +36,33 @@ const GeekLayout = () => {
           <Menu
             mode="inline"
             theme="dark"
-            defaultSelectedKeys={['1']}
+            selectedKeys={selectedKeys}
             style={{ height: '100%', borderRight: 0 }}
+            items={[
+              {
+                key: '/',
+                icon: <HomeOutlined />,
+                label: '数据概览'
+              },
+              {
+                key: '/article',
+                icon: <DiffOutlined />,
+                label: '内容管理'
+              },
+              {
+                key: '/publish',
+                icon: <EditOutlined />,
+                label: '发布文章'
+              }
+            ]}
+            onClick={onMenuClick}
           >
-            <Menu.Item icon={<HomeOutlined />} key="1">
-              数据概览
-            </Menu.Item>
-            <Menu.Item icon={<DiffOutlined />} key="2">
-              内容管理
-            </Menu.Item>
-            <Menu.Item icon={<EditOutlined />} key="3">
-              发布文章
-            </Menu.Item>
           </Menu>
         </Sider>
-        <Layout className="layout-content" style={{ padding: 20 }}>内容</Layout>
+        <Layout className="layout-content" style={{ padding: 20 }}>
+          {/* 二级路由的出口 */}
+          <Outlet />
+        </Layout>
       </Layout>
     </Layout>
   )
