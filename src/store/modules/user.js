@@ -1,6 +1,7 @@
 // 用户相关的状态管理
 import { createSlice } from '@reduxjs/toolkit'
-import { request, setToken as _setToken, getToken, removeToken } from '@/utils'
+import { setToken as _setToken, getToken, removeToken } from '@/utils'
+import { loginAPI, getProfileAPI } from '@/apis/user'
 
 const userStore = createSlice({
   // 模块名
@@ -39,7 +40,7 @@ const userReducer = userStore.reducer
 const fetchLogin = (loginForm) => {
   return async (dispatch) => {
     // 发送异步请求
-    const res = await request.post('/authorizations', loginForm)
+    const res = await loginAPI(loginForm)
     // 提交同步action进行token的存入
     dispatch(setToken(res.data.token))
   }
@@ -49,7 +50,7 @@ const fetchLogin = (loginForm) => {
 const fetchUserInfo = () => {
   return async (dispatch) => {
     // 获取用户信息
-    const res = await request.get('/user/profile')
+    const res = await getProfileAPI()
     // 提交同步action进行用户信息的保存
     dispatch(setUserInfo(res.data))
   }
