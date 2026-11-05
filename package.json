@@ -1,6 +1,7 @@
 {
   "name": "react-jike",
   "version": "0.1.0",
+  "homepage": "https://mark-1994.github.io/react-jike-2023/",
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^2.13.0",
