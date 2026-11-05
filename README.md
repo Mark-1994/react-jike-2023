@@ -3,7 +3,7 @@
 基于 React + Ant Design 搭建的内容发布管理后台，包含登录鉴权、文章管理、文章发布/编辑、数据统计等模块。
 
 - **在线预览**：<https://mark-1994.github.io/react-jike-2023/>
-- **接口文档**：<http://geek.itheima.net/api.html>
+- **接口文档**：<https://s.apifox.cn/fa9274ac-362e-4905-806b-6135df6aa90e/api-31967347>
 
 ## 项目简介
 
