@@ -4,14 +4,14 @@ import AuthRoute from '@/components/AuthRoute'
 // import Home from '@/pages/Home'
 // import Article from '@/pages/Article'
 // import Publish from '@/pages/Publish'
-import { createBrowserRouter } from 'react-router-dom'
+import { createHashRouter } from 'react-router-dom'
 import { lazy, Suspense } from 'react'
 
 const Home = lazy(() => import('@/pages/Home'))
 const Article = lazy(() => import('@/pages/Article'))
 const Publish = lazy(() => import('@/pages/Publish'))
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: '/',
     element: <AuthRoute><Layout /></AuthRoute>,
