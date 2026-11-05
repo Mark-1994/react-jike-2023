@@ -11,11 +11,11 @@ import {
   message
 } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import './index.scss'
 import ReactQuill from 'react-quill-new'
 import 'react-quill-new/dist/quill.snow.css'
-import { getChannelsAPI, createArticleAPI } from '@/apis/publish'
+import { getChannelsAPI, createArticleAPI, getArticleDetailAPI, updateArticleAPI } from '@/apis/publish'
 import { useEffect, useState } from 'react'
 
 const { Option } = Select
@@ -38,11 +38,18 @@ const Publish = () => {
       title,
       content,
       cover: { type, images: imageList.map(item => item.url || item.response.data.url) },
-      channel_id
+      channel_id,
+      id: articleId
     }
-    await createArticleAPI(reqData)
-    message.success('发布文章成功')
-    navigate('/article')
+    if (articleId) {
+      await updateArticleAPI(reqData)
+      message.success('编辑文章成功')
+      navigate('/article')
+    } else {
+      await createArticleAPI(reqData)
+      message.success('发布文章成功')
+      navigate('/article')
+    }
   }
   // 上传回调
   const [imageList, setImageList] = useState([])
@@ -54,13 +61,30 @@ const Publish = () => {
   const onTypeChange = (e) => {
     setImageType(e.target.value)
   }
+  // 回填数据
+  const [searchParams] = useSearchParams()
+  const articleId = searchParams.get('id')
+  // 获取表单实例
+  const [form] = Form.useForm()
+  useEffect(() => {
+    if (!articleId) return
+    getArticleDetailAPI(articleId).then((res) => {
+      form.setFieldsValue({
+        ...res.data,
+        type: res.data.cover.type,
+        images: res.data.cover.images.map(item => ({ url: item }))
+      })
+      setImageType(res.data.cover.type)
+      setImageList(res.data.cover.images.map(item => ({ url: item })))
+    })
+  }, [articleId, form])
   return (
     <div className="publish">
       <Card
         title={
           <Breadcrumb separator=">" items={[
             { title: <Link to="/">首页</Link> },
-            { title: '发布文章' }
+            { title: `${articleId ? '编辑' : '发布'}文章` }
           ]} />
         }
       >
@@ -69,6 +93,7 @@ const Publish = () => {
           wrapperCol={{ span: 16 }}
           initialValues={{ type: 1 }}
           onFinish={onFinish}
+          form={form}
         >
           <Form.Item
             label="标题"
@@ -106,6 +131,7 @@ const Publish = () => {
               action="https://geek.itheima.net/v1_0/upload"
               onChange={onChange}
               maxCount={imageType}
+              fileList={imageList}
             >
               <div style={{ marginTop: 8 }}>
                 <PlusOutlined />
